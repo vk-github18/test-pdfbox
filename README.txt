@@ -1,14 +1,21 @@
 
-            PDFont arimo0 = PDType0Font.load(
+setUp()
+            PDType0Font fontInputStream = PDType0Font.load(
                     doc, this.getClass().getResourceAsStream("/fonts/arimo/Arimo-Regular.ttf"));
+            PDType0Font fontDictionary = new PDType0Font(fontInputStream.getCOSObject());
+            int codePoint = 0x2070;
 
-            return ((PDType0Font) pdFont).getCmapLookup().getGlyphId(codePoint) != 0;
-            
-            
-            
-            byte[] encoded0 = arimo0.encode("⁰");
-            HexFormat.of().formatHex()
-            System.out.println("Encoded String" + new String(encoded0, StandardCharsets.UTF_8));
+testCmapLookupIsNotNullForFontCreatedWithInputStream
+            assertNotNull(fontInputStream.getCmapLookup());
 
-            byte[] encoded = arimo.encode("⁰");
-            System.out.println("Encoded String" + new String(encoded, StandardCharsets.UTF_8));
+testCmapLookupIsNotNullForFontCreatedWithDictionary
+            assertNotNull(fontInputStream.getCmapLookup());
+            
+            
+testArimoContainsU2070ForFontCreatedWithInputStream 
+        assertDoesNotThrow(() -> fontInputStream.encode("\u2070"));
+
+
+testArimoContainsU2070ForFontCreatedWithDictionary
+        assertDoesNotThrow(() -> fontDictionary.encode("\u2070"));
+
