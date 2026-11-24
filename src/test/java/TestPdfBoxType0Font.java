@@ -1,6 +1,7 @@
 
 import java.awt.FontFormatException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 
 import org.junit.jupiter.api.Test;
@@ -19,12 +20,22 @@ class TestPdfBoxType0Font {
 
     PDType0Font loadFontInputStream() throws IOException, FontFormatException, URISyntaxException {
         PDDocument doc = new PDDocument();
-        return PDType0Font.load(
-                doc, this.getClass().getResourceAsStream("/ttf/Arimo-Regular.ttf"));
+        try {
+            InputStream is = this.getClass().getResourceAsStream("ttf/Arimo-Regular.ttf");
+            PDType0Font font = PDType0Font.load(doc, is);
+            return font;
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     PDType0Font loadFontDictionary() throws IOException, FontFormatException, URISyntaxException {
-        return new PDType0Font(loadFontInputStream().getCOSObject());
+        PDType0Font font = new PDType0Font(loadFontInputStream().getCOSObject());
+        return font;
+        // Nov. 24, 2026 10:57:59 PM org.apache.pdfbox.pdmodel.font.PDCIDFontType2 findFontOrSubstitute
+        // WARNUNG: Using fallback font LiberationSans for CID-keyed TrueType font Arimo-Regular
+        // descendantFont.ttf="LiberationSans"
     }
 
     @Test
